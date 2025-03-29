@@ -1,4 +1,5 @@
 
+
 # 🧠 Tokio Node — T3RN Executor Node (Testnet)
 
 This repository contains everything you need to run a **T3RN Executor Node** in a containerized environment using Docker.
@@ -135,3 +136,7 @@ tokio-node-t3rn-executor/
 
 Based on the official T3RN Executor Documentation.  
 Packaged, documented and containerized by @KARINE001.
+=======
+# tokio-node-t3rn-executor
+t3rn Executor Node installation with script, tutorial and systemd setup (TokioStack)
+

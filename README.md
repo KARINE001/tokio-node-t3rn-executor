@@ -131,12 +131,14 @@ tokio-node-t3rn-executor/
 ├── README.md
 └── ...
 ```
-
 ### 🙌 Credit
 
-This node pack was created by [@tokiostack](https://github.com/karine001) based on the official **T3RN Executor Documentation**. 
+Based on the official **T3RN Executor Documentation**.  
+Packaged, documented, and containerized by **[TokioStack](https://github.com/karine001)** —  
+Infra tutorials, monitoring, and clean setups for blockchain node operators.
 
 🔗 GitHub: [@karine001](https://github.com/karine001)  
 🐦 Twitter: [@tokiostack](https://twitter.com/tokiostack)
 
-Feel free to fork, improve, and contribute — just keep a link back 🖖
+> If you use this repo or adapt it, please credit **TokioStack** 🙏  
+> Feel free to fork, improve, and contribute — just keep a link back 🖖

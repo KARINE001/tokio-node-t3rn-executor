@@ -1,52 +1,137 @@
-# t3rn Executor Node Installation (Full Setup)
 
-This repository provides a full guide and installation script for setting up a **t3rn Executor Node** on your VPS.
+# 🧠 Tokio Node — T3RN Executor Node (Testnet)
 
-## What is t3rn?
-t3rn is a cross-chain execution protocol designed to execute smart contracts across multiple blockchains reliably.
-
-## What is the Executor?
-An Executor is a node that listens to execution requests and performs the actual transaction on the target chain. It's a key component of t3rn's trustless execution layer.
+This repository contains everything you need to run a **T3RN Executor Node** in a containerized environment using Docker.
 
 ---
 
-## VPS Requirements
-- OS: Ubuntu 22.04 LTS
-- 4+ vCPU, 16+ GB RAM, 200+ GB SSD
-- Open ports: 30333, 9933, 9944
+## 🧰 Features
+
+- 🐳 Simple Docker-based setup
+- 🔁 Auto-restart on failure
+- 🔐 Environment variables in `.env` file
+- 🧪 Testnet-ready (Sepolia, Optimism, Base, Arbitrum, Unichain, Caldera)
+- 🧩 Fully aligned with the official [T3RN documentation](https://docs.t3rn.io/executor/become-an-executor/binary-setup)
 
 ---
 
-## Installation Steps
+## 🚀 Prerequisites
 
-1. Upload and run the script:
+> ✅ Make sure Docker and Docker Compose are installed on your VPS or local machine:
+
 ```bash
-chmod +x install.sh
-./install.sh
+# Install Docker
+curl -fsSL https://get.docker.com | sh
+
+# (Optional) Add current user to Docker group
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Enable and start Docker
+sudo systemctl enable docker
+sudo systemctl start docker
+
+# Install Compose plugin if not present
+sudo apt install docker-compose-plugin
 ```
 
-2. Edit the environment file:
-```bash
-nano /opt/t3rn-executor/.env
-```
-Fill in:
-- Your account address
-- Your private key
-- The network (e.g., sepolia or rococo)
+## 📂 Clone this Repository
 
-3. Run the executor:
 ```bash
-/opt/t3rn-executor/executor --executor --network sepolia
+git clone https://github.com/KARINE001/tokio-node-t3rn-executor.git
+cd tokio-node-t3rn-executor
 ```
 
----
+## ⚙️ Configure the Environment
 
-## Optional: systemd integration
+Rename the example file and set your private key:
 
-You can run the executor as a system service. Ask us for `executor.service` or follow the guide.
+```bash
+cp .env.example .env
+nano .env
+```
 
----
+Paste your private key and save the file.
 
-## Resources
-- Official Docs: https://docs.t3rn.io/executor/become-an-executor/binary-setup
-- Project Website: https://www.t3rn.io/
+## 🛠️ Build and Run the Node
+
+```bash
+docker compose up -d --build
+```
+
+This will:
+
+- Download the latest executor binary from T3RN GitHub releases
+- Build the Docker image
+- Start the container with all required environment variables
+- Map necessary ports (9944, 30333)
+
+## ✅ Check If the Node Is Running
+
+```bash
+docker ps
+docker logs -f t3rn-executor
+```
+
+You should see:
+
+- ✅ Wallet loaded
+- 🔌 RPC provider initialized
+- 🔗 Connected to network
+- 📯 Enabled networks: ...
+
+## 🧪 Test RPC
+
+```bash
+curl http://127.0.0.1:9944
+```
+
+## 🔄 Restart Policy (Docker Native)
+
+This node does not need a systemd file because Docker handles restart automatically.
+
+To ensure restart on reboot or crash:
+
+```yaml
+# docker-compose.yml
+restart: unless-stopped
+```
+
+## 🔐 Fund Your Wallet for Testing
+
+You’ll need testnet ETH on all enabled networks:
+
+1. **Faucet Sepolia ETH**
+    - https://sepolia-faucet.pk910.de/
+    - https://docs.metamask.io/developer-tools/faucet/
+2. **Use Bridges for Test Tokens**
+    - https://superbridge.app/base-sepolia
+    - https://testnets.relay.link/bridge
+3. **Caldera Faucet (L2RN)**
+    - https://rivalz2.hub.caldera.xyz/
+
+> Make sure to bridge some Sepolia ETH to Base, Optimism, Unichain, and Caldera testnets.
+
+## ✅ Monitoring Snippet
+
+```bash
+docker logs -f t3rn-executor
+docker exec -it t3rn-executor netstat -tnp | grep 30333
+```
+
+## 🧾 Project Structure
+
+```
+tokio-node-t3rn-executor/
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
+├── entrypoint.sh
+├── README.md
+└── ...
+```
+
+## 🤝 Credits
+
+Based on the official T3RN Executor Documentation.  
+Packaged, documented and containerized by @KARINE001.

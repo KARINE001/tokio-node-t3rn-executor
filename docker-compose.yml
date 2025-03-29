@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  t3rn-executor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: t3rn-executor
+    restart: unless-stopped
+    ports:
+      - "9944:9944"
+      - "30333:30333"
+    env_file:
+      - .env
+    command: ["/usr/src/app/entrypoint.sh"]

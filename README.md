@@ -132,8 +132,11 @@ tokio-node-t3rn-executor/
 └── ...
 ```
 
-## 🤝 Credits
+### 🙌 Credit
 
-Based on the official T3RN Executor Documentation.  
-Packaged, documented and containerized by @KARINE001.
+This node pack was created by [@tokiostack](https://github.com/karine001) based on the official **T3RN Executor Documentation**. 
 
+🔗 GitHub: [@karine001](https://github.com/karine001)  
+🐦 Twitter: [@tokiostack](https://twitter.com/tokiostack)
+
+Feel free to fork, improve, and contribute — just keep a link back 🖖

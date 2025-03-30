@@ -41,9 +41,12 @@ sudo ufw reload
 
 ## 🚀 Prerequisites
 
-> ✅ Make sure Docker and Docker Compose are installed on your VPS or local machine:
+> ✅ Make sure **Git**, **Docker**, and **Docker Compose** are installed on your VPS or local machine:
 
 ```bash
+# Install Git
+sudo apt update && sudo apt install git -y
+
 # Install Docker
 curl -fsSL https://get.docker.com | sh
 
@@ -90,7 +93,6 @@ docker compose up -d --build
 ```
 
 This will:
-
 - Download the latest executor binary from T3RN GitHub releases
 - Build the Docker image
 - Start the container with all required environment variables
@@ -106,11 +108,17 @@ docker logs -f t3rn-executor
 ```
 
 You should see:
-
 - ✅ Wallet loaded  
 - 🔌 RPC provider initialized  
 - 🔗 Connected to network  
 - 📯 Enabled networks: ...
+
+> 🔄 If you later **add or change a network or RPC**, or if you **update the repo**, always run:
+> ```bash
+> docker compose down
+> docker compose up -d --build
+> ```
+> This ensures the new config is applied.
 
 ---
 
@@ -119,7 +127,10 @@ You should see:
 A diagnostic script named `check_t3rn_node.sh` is provided in the repo. It helps you:
 
 - Check if the `t3rn-executor` container is running
-- View the last 20 log lines
+- View the last 100 log lines
+- Count recent BidReceived events
+- Detect RPC errors and rejected bids
+- Show active networks being processed
 
 ### 🟢 Run it like this:
 
@@ -131,6 +142,9 @@ This gives instant feedback such as:
 ```
 ✅ Container 't3rn-executor' is running.
 🔍 Recent logs:
+♾️Total of BidReceived event received
+🚨 Error during health check
+🌐 Networks active in logs:
 ...
 ```
 
@@ -160,7 +174,7 @@ You’ll need testnet ETH on all enabled networks:
     - https://superbridge.app/base-sepolia
     - https://testnets.relay.link/bridge
 3. **Caldera Faucet (L2RN)**
-    - https://rivalz2.hub.caldera.xyz/
+    - https://rivalz2.rpc.caldera.xyz/http
 
 > Make sure to bridge some Sepolia ETH to Base, Optimism, Unichain, and Caldera testnets.
 

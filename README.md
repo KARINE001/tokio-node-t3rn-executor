@@ -6,6 +6,29 @@ This repository contains everything you need to run a **T3RN Executor Node** in 
 
 ---
 
+## ⚙️ VPS Requirements
+
+To run a stable Executor node, we recommend:
+
+- Ubuntu 22.04 (64-bit)
+- 4 vCPU
+- 16 GB RAM
+- 200+ GB SSD
+- Open these ports:
+  - `30333/tcp` for p2p
+  - `9933/tcp` for RPC
+  - `9944/tcp` for WebSocket
+
+If you use UFW on your server, open the ports with:
+```bash
+sudo ufw allow 30333/tcp
+sudo ufw allow 9933/tcp
+sudo ufw allow 9944/tcp
+sudo ufw reload
+```
+
+---
+
 ## 🧰 Features
 
 - 🐳 Simple Docker-based setup
@@ -36,12 +59,16 @@ sudo systemctl start docker
 sudo apt install docker-compose-plugin
 ```
 
+---
+
 ## 📂 Clone this Repository
 
 ```bash
 git clone https://github.com/KARINE001/tokio-node-t3rn-executor.git
 cd tokio-node-t3rn-executor
 ```
+
+---
 
 ## ⚙️ Configure the Environment
 
@@ -53,6 +80,8 @@ nano .env
 ```
 
 Paste your private key and save the file.
+
+---
 
 ## 🛠️ Build and Run the Node
 
@@ -67,6 +96,8 @@ This will:
 - Start the container with all required environment variables
 - Map necessary ports (9944, 30333)
 
+---
+
 ## ✅ Check If the Node Is Running
 
 ```bash
@@ -76,16 +107,34 @@ docker logs -f t3rn-executor
 
 You should see:
 
-- ✅ Wallet loaded
-- 🔌 RPC provider initialized
-- 🔗 Connected to network
+- ✅ Wallet loaded  
+- 🔌 RPC provider initialized  
+- 🔗 Connected to network  
 - 📯 Enabled networks: ...
 
-## 🧪 Test RPC
+---
+
+## 🔍 Node Check Script (Included)
+
+A diagnostic script named `check_t3rn_node.sh` is provided in the repo. It helps you:
+
+- Check if the `t3rn-executor` container is running
+- View the last 20 log lines
+
+### 🟢 Run it like this:
 
 ```bash
-curl http://127.0.0.1:9944
+bash check_t3rn_node.sh
 ```
+
+This gives instant feedback such as:
+```
+✅ Container 't3rn-executor' is running.
+🔍 Recent logs:
+...
+```
+
+---
 
 ## 🔄 Restart Policy (Docker Native)
 
@@ -97,6 +146,8 @@ To ensure restart on reboot or crash:
 # docker-compose.yml
 restart: unless-stopped
 ```
+
+---
 
 ## 🔐 Fund Your Wallet for Testing
 
@@ -113,12 +164,7 @@ You’ll need testnet ETH on all enabled networks:
 
 > Make sure to bridge some Sepolia ETH to Base, Optimism, Unichain, and Caldera testnets.
 
-## ✅ Monitoring Snippet
-
-```bash
-docker logs -f t3rn-executor
-docker exec -it t3rn-executor netstat -tnp | grep 30333
-```
+---
 
 ## 🧾 Project Structure
 
@@ -127,10 +173,14 @@ tokio-node-t3rn-executor/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── .env.example
+├── check_t3rn_node.sh
 ├── entrypoint.sh
 ├── README.md
 └── ...
 ```
+
+---
+
 ### 🙌 Credit
 
 Based on the official **T3RN Executor Documentation**.  

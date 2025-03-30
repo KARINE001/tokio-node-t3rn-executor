@@ -9,7 +9,4 @@ docker ps | grep $CONTAINER_NAME > /dev/null && echo "✅ Container '$CONTAINER_
 echo -e "\n🔍 Recent logs:"
 docker logs --tail 20 $CONTAINER_NAME 2>/dev/null
 
-# Port status
-echo -e "\n🌐 Port bindings:"
-docker exec -it $CONTAINER_NAME netstat -tnp | grep 9944
-docker exec -it $CONTAINER_NAME netstat -tnp | grep 30333
+

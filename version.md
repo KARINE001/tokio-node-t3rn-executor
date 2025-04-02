@@ -1,8 +1,13 @@
-# Binary Versions Log — T3rn Executor
 
-- 2025-03-29 → Initial release of T3rn Executor Dockerized Pack by @tokionode  
-  Executor configuration based on official documentation  
-  Included binary reference: stable testnet build (as of March 2025)
+# 📦 Version History — T3RN Executor Docker Pack
 
-- Source repository: https://github.com/t3rn
-- Documentation: https://docs.t3rn.io
+## v1.1 – April 2, 2025
+- Updated `.env` with new network RPCs and higher gas limits
+- Improved `check_t3rn_node.sh` script (more readable output + error detection)
+- Refactored `Dockerfile` to fetch latest executor binary
+- Cleaner `entrypoint.sh` with network autodetection
+- Added Prometheus port `9090` in `docker-compose.yml`
+
+## v1.0 – March 29, 2025
+- Initial Docker-based node setup
+- Basic monitoring script and env template

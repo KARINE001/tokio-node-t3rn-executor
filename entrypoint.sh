@@ -1,7 +1,5 @@
 #!/bin/bash
-set -e
-
-echo "🧠 Starting T3RN Executor Node..."
-
-# Lancer le binaire
-./executor
+set -a
+source /app/.env
+set +a
+exec executor

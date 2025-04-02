@@ -1,30 +1,19 @@
-# Use a lightweight base image
-FROM ubuntu:22.04
+FROM debian:bullseye-slim
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    tar \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Set working directory
-WORKDIR /usr/src/app
+RUN apt-get update && apt-get install -y curl tar && rm -rf /var/lib/apt/lists/*
 
-# Download and extract the latest t3rn executor binary
-RUN curl -s https://api.github.com/repos/t3rn/executor-release/releases/latest \
-    | grep -Po '"tag_name": "\K.*?(?=")' \
-    | xargs -I {{}} wget https://github.com/t3rn/executor-release/releases/download/{{}}/executor-linux-{{}}.tar.gz \
-    && tar -xzf executor-linux-*.tar.gz \
-    && rm executor-linux-*.tar.gz
+# Change this to pin to a version, or keep dynamic for latest
+ARG EXECUTOR_VERSION=0.61.0
 
-# Copy entrypoint script
-COPY entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
+RUN curl -LO https://github.com/t3rn/executor-release/releases/download/v${EXECUTOR_VERSION}/executor-linux-v${EXECUTOR_VERSION}.tar.gz && \
+    tar -xzf executor-linux-v${EXECUTOR_VERSION}.tar.gz && \
+    rm executor-linux-v${EXECUTOR_VERSION}.tar.gz
 
-# Expose necessary ports
-EXPOSE 9944 30333
+ENV PATH="/app/executor/executor/bin:$PATH"
 
-# Set entrypoint
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]

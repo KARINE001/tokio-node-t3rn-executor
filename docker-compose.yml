@@ -1,15 +1,21 @@
-version: '3.8'
-
+# Docker Compose file for t3rn executor
 services:
   t3rn-executor:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: t3rn-executor
     restart: unless-stopped
-    ports:
-      - "9944:9944"
-      - "30333:30333"
     env_file:
       - .env
-    command: ["/usr/src/app/entrypoint.sh"]
+    ports:
+      - "9092:9090"
+    volumes:
+      - executor_data:/app/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  executor_data:
+

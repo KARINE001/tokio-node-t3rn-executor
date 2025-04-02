@@ -1,102 +1,89 @@
 
+# 🧠 T3RN Executor Node — Dockerized Setup by TokioStack
 
-# 🧠 Tokio Node — T3RN Executor Node (Testnet)
+This repository provides a clean, production-ready Docker environment for running the [T3RN Executor](https://docs.t3rn.io/executor) node.  
+It’s ideal for both beginners and advanced operators — and ready for contribution upstream.
 
-This repository contains everything you need to run a **T3RN Executor Node** in a containerized environment using Docker.
+---
+
+## 🚀 Features
+
+- 🐳 Dockerized Executor binary (auto-fetches latest)
+- 🔐 Secure `.env` configuration
+- 🔁 Auto-rebuild for version/config updates
+- 📊 Prometheus metrics (port `9090`)
+- 🧪 Multi-network testnet support
+- 🧩 Matches the [official binary setup](https://docs.t3rn.io/executor/become-an-executor/binary-setup)
 
 ---
 
 ## ⚙️ VPS Requirements
 
-To run a stable Executor node, we recommend:
+| Resource | Minimum        |
+|----------|----------------|
+| OS       | Ubuntu 22.04+  |
+| CPU      | 4 vCPU         |
+| RAM      | 16 GB          |
+| Storage  | 200+ GB SSD    |
 
-- Ubuntu 22.04 (64-bit)
-- 4 vCPU
-- 16 GB RAM
-- 200+ GB SSD
-- Open these ports:
-  - `30333/tcp` for p2p
-  - `9933/tcp` for RPC
-  - `9944/tcp` for WebSocket
-
-If you use UFW on your server, open the ports with:
+Open Prometheus port:
 ```bash
-sudo ufw allow 30333/tcp
-sudo ufw allow 9933/tcp
-sudo ufw allow 9944/tcp
+sudo ufw allow 9090/tcp
 sudo ufw reload
 ```
 
 ---
 
-## 🧰 Features
+## 🛠️ Installation Guide
 
-- 🐳 Simple Docker-based setup
-- 🔁 Auto-restart on failure
-- 🔐 Environment variables in `.env` file
-- 🧪 Testnet-ready (Sepolia, Optimism, Base, Arbitrum, Unichain, Caldera)
-- 🧩 Fully aligned with the official [T3RN documentation](https://docs.t3rn.io/executor/become-an-executor/binary-setup)
-
----
-
-## 🚀 Prerequisites
-
-> ✅ Make sure **Git**, **Docker**, and **Docker Compose** are installed on your VPS or local machine:
+### 1. Clone the Repo
 
 ```bash
-# Install Git
-sudo apt update && sudo apt install git -y
-
-# Install Docker
-curl -fsSL https://get.docker.com | sh
-
-# (Optional) Add current user to Docker group
-sudo usermod -aG docker $USER
-newgrp docker
-
-# Enable and start Docker
-sudo systemctl enable docker
-sudo systemctl start docker
-
-# Install Compose plugin if not present
-sudo apt install docker-compose-plugin
+git clone https://github.com/yourname/t3rn-executor-docker.git
+cd t3rn-executor-docker
 ```
 
----
-
-## 📂 Clone this Repository
-
-```bash
-git clone https://github.com/KARINE001/tokio-node-t3rn-executor.git
-cd tokio-node-t3rn-executor
-```
-
----
-
-## ⚙️ Configure the Environment
-
-Rename the example file and set your private key:
+### 2. Set Up the Environment
 
 ```bash
 cp .env.example .env
 nano .env
 ```
 
-Paste your private key and save the file.
+🔑 Paste your wallet’s **private key**  
+🌐 Add valid RPCs under `RPC_ENDPOINTS` (see `.env.example`)
 
----
-
-## 🛠️ Build and Run the Node
+### 3. Build and Launch the Node
 
 ```bash
 docker compose up -d --build
 ```
 
+✅ This will:
+- Build the image
+- Download the latest `executor` binary
+- Apply your config
+- Start the container in background
+
+---
+
+## 🔄 Updating Your Executor Node
+
+Anytime you:
+- Add/change networks or RPCs
+- Want the latest Executor version from GitHub
+
+Run:
+```bash
+docker compose down
+docker compose up -d --build
+```
+
 This will:
-- Download the latest executor binary from T3RN GitHub releases
-- Build the Docker image
-- Start the container with all required environment variables
-- Map necessary ports (9944, 30333)
+- 🚀 Rebuild the Docker image
+- 🔧 Apply updated config
+- 🆕 Pull the latest Executor binary
+
 
 ---
 
@@ -113,96 +100,73 @@ You should see:
 - 🔗 Connected to network  
 - 📯 Enabled networks: ...
 
-> 🔄 If you later **add or change a network or RPC**, or if you **update the repo**, always run:
-> ```bash
-> docker compose down
-> docker compose up -d --build
-> ```
-> This ensures the new config is applied.
+```bash
+docker ps
+docker logs -f t3rn-executor
+```
+
+Look for:
+- ✅ Wallet loaded
+- 🔌 RPC initialized
+- 📯 Enabled networks
 
 ---
 
-## 🔍 Node Check Script (Included)
+## 🧰 Docker Commands Cheat Sheet
 
-A diagnostic script named `check_t3rn_node.sh` is provided in the repo. It helps you:
+```bash
+docker ps                        # Show running containers
+docker logs -f t3rn-executor    # View logs
+docker stop t3rn-executor       # Stop the node
+docker rm t3rn-executor         # Remove the container
+docker compose down             # Stop and clean everything
+docker system prune -a          # Wipe unused images/containers
+```
 
-- Check if the `t3rn-executor` container is running
-- View the last 100 log lines
-- Count recent BidReceived events
-- Detect RPC errors and rejected bids
-- Show active networks being processed
+---
 
-### 🟢 Run it like this:
+## 📂 Project Structure
+
+```
+t3rn-executor-docker/
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
+├── entrypoint.sh
+├── README.md
+```
+
+---
+
+
+---
+
+## 🧪 Health Check Script
+
+To check if your node is healthy and functioning properly, run the built-in diagnostic script:
 
 ```bash
 bash check_t3rn_node.sh
 ```
 
-This gives instant feedback such as:
-```
-✅ Container 't3rn-executor' is running.
-🔍 Recent logs:
-♾️Total of BidReceived event received
-🚨 Error during health check
-🌐 Networks active in logs:
-...
-```
+### What it does:
+- ✅ Checks if the Docker container is running
+- ⏱ Displays uptime and resource usage
+- 🔁 Warns if the container is restarting too often
+- 🔍 Parses logs to show:
+  - Number of bids received and rejected
+  - Errors count
+  - Active networks
+- 🌐 Validates each RPC endpoint is live via real-time `eth_blockNumber` requests
+
+
+It's especially useful after setup, or if you suspect issues with RPCs or network responsiveness.
 
 ---
 
-## 🔄 Restart Policy (Docker Native)
+## 🙌 Credits
 
-This node does not need a systemd file because Docker handles restart automatically.
+- Based on [T3RN Docs](https://docs.t3rn.io/executor)
+- Dockerized by [TokioStack](https://github.com/karine001)
 
-To ensure restart on reboot or crash:
-
-```yaml
-# docker-compose.yml
-restart: unless-stopped
-```
-
----
-
-## 🔐 Fund Your Wallet for Testing
-
-You’ll need testnet ETH on all enabled networks:
-
-1. **Faucet Sepolia ETH**
-    - https://sepolia-faucet.pk910.de/
-    - https://docs.metamask.io/developer-tools/faucet/
-2. **Use Bridges for Test Tokens**
-    - https://superbridge.app/base-sepolia
-    - https://testnets.relay.link/bridge
-3. **Caldera Faucet (L2RN)**
-    - https://rivalz2.rpc.caldera.xyz/http
-
-> Make sure to bridge some Sepolia ETH to Base, Optimism, Unichain, and Caldera testnets.
-
----
-
-## 🧾 Project Structure
-
-```
-tokio-node-t3rn-executor/
-├── docker-compose.yml
-├── Dockerfile
-├── .env.example
-├── check_t3rn_node.sh
-├── entrypoint.sh
-├── README.md
-└── ...
-```
-
----
-
-### 🙌 Credit
-
-Based on the official **T3RN Executor Documentation**.  
-Packaged, documented, and containerized by **[TokioStack](https://github.com/karine001)** —  
-Infra tutorials, monitoring, and clean setups for blockchain node operators.
-
-🔗 GitHub: [@karine001](https://github.com/karine001)  
-🐦 Twitter: [@tokiostack](https://twitter.com/tokiostack)
-
-> If you use this repo or adapt it, please credit **TokioStack** 🙏  
-> Feel free to fork, improve, and contribute — just keep a link back 🖖
+> Fork-friendly and ready for PR — contributions welcome to improve the devops flow!

@@ -4,12 +4,14 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y curl tar && rm -rf /var/lib/apt/lists/*
 
-# Change this to pin to a version, or keep dynamic for latest
-ARG EXECUTOR_VERSION=0.61.0
-
-RUN curl -LO https://github.com/t3rn/executor-release/releases/download/v${EXECUTOR_VERSION}/executor-linux-v${EXECUTOR_VERSION}.tar.gz && \
-    tar -xzf executor-linux-v${EXECUTOR_VERSION}.tar.gz && \
-    rm executor-linux-v${EXECUTOR_VERSION}.tar.gz
+# Download the latest release of the t3rn executor binary dynamically
+RUN curl -s https://api.github.com/repos/t3rn/executor-release/releases/latest \
+    | grep browser_download_url \
+    | grep linux \
+    | cut -d '"' -f 4 \
+    | xargs curl -LO && \
+    tar -xzf executor-linux-v*.tar.gz && \
+    rm executor-linux-v*.tar.gz
 
 ENV PATH="/app/executor/executor/bin:$PATH"
 

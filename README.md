@@ -2,7 +2,7 @@
 # 🧠 T3RN Executor Node — Dockerized Setup by TokioStack
 
 This repository provides a clean, production-ready Docker environment for running the [T3RN Executor](https://docs.t3rn.io/executor) node.  
-It’s ideal for both beginners and advanced operators — and ready for contribution upstream.
+
 
 ---
 
@@ -100,15 +100,6 @@ You should see:
 - 🔗 Connected to network  
 - 📯 Enabled networks: ...
 
-```bash
-docker ps
-docker logs -f t3rn-executor
-```
-
-Look for:
-- ✅ Wallet loaded
-- 🔌 RPC initialized
-- 📯 Enabled networks
 
 ---
 
@@ -125,6 +116,35 @@ docker system prune -a          # Wipe unused images/containers
 
 ---
 
+## 🌐 Ports to Open
+
+The T3RN Executor node does not expose RPC/WebSocket interfaces or require peer-to-peer connections.  
+Only one port is necessary for Prometheus metrics if monitoring is enabled.
+
+| Port     | Protocol | Purpose            |
+|----------|----------|--------------------|
+| 9090/tcp | TCP      | Prometheus endpoint |
+
+```bash
+sudo ufw allow 9090/tcp
+sudo ufw reload
+```
+
+
+:::caution Wallet balance requirement is hardcoded
+
+The minimum required balance for each enabled network is **not configurable** via `.env`.
+
+To be eligible for bidding:
+- Ensure your wallet holds **at least 10–11 ETH (testnet)** on **each** enabled network.
+- This threshold is defined inside the Executor binary (`EXECUTOR_MIN_BALANCE_THRESHOLD_ETH`) and cannot be changed manually.
+
+Use [relay.link](https://testnets.relay.link/bridge) or [superbridge.app](https://superbridge.app) to bridge test ETH across networks.  
+You can also **buy Sepolia ETH using Mainnet ETH** via [testnetbridge.com](https://www.testnetbridge.com).
+:::
+
+
+
 ## 📂 Project Structure
 
 ```
@@ -135,9 +155,6 @@ t3rn-executor-docker/
 ├── entrypoint.sh
 ├── README.md
 ```
-
----
-
 
 ---
 
@@ -169,4 +186,6 @@ It's especially useful after setup, or if you suspect issues with RPCs or networ
 - Based on [T3RN Docs](https://docs.t3rn.io/executor)
 - Dockerized by [TokioStack](https://github.com/karine001)
 
-> Fork-friendly and ready for PR — contributions welcome to improve the devops flow!
+
+
+> If you use this repo or adapt it, please credit **TokioStack** 🙏 — contributions welcome to improve the devops flow!
